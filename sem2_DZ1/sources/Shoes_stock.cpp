@@ -4,14 +4,13 @@ using std::endl;
 using std::cin;
 using std::cout;
 
-unordered_map<string, unordered_map<size_t, 
+unordered_map<string, multimap<size_t, 
 	pair<size_t, size_t>>> Shoes_stock::get_sizes() const {
-	unordered_map<string, unordered_map<size_t, pair<size_t, size_t>>> newSizes;
-
-	for_each(sizes.begin(), sizes.end(), [&newSizes](pair<string,
-		unordered_map<size_t, size_t>> p)
+	unordered_map<string, multimap<size_t, pair<size_t, size_t>>> newSizes;
+	for_each(sizes.begin(), sizes.end(), 
+		[&newSizes](pair<string,multimap<size_t, size_t>> p)
 		{
-			unordered_map<size_t, pair<size_t, size_t>> newAmountSizes;
+			multimap<size_t, pair<size_t, size_t>> newAmountSizes;
 			for_each(p.second.begin(), p.second.end(),
 				[&newAmountSizes, &p](pair < size_t, size_t> amountSizes)
 				{
@@ -23,16 +22,16 @@ unordered_map<string, unordered_map<size_t,
 }
 
 void Shoes_stock::set_sizes(unordered_map<string,
-	unordered_map<size_t, pair<size_t, size_t>>> s) {
+	multimap<size_t, pair<size_t, size_t>>> s) {
 
-	unordered_map<string, unordered_map<size_t, size_t>> newSizes;
+	unordered_map<string, multimap<size_t, size_t>> newSizes;
 
-	for_each(s.begin(), s.end(), [&newSizes](pair<string,
-		unordered_map<size_t, pair<size_t,size_t>>> p) 
+	for_each(s.begin(), s.end(), 
+		[&newSizes](pair<string,multimap<size_t, pair<size_t,size_t>>> p) 
 		{
-			unordered_map <size_t, size_t> newAmountSizes;
-			for_each(p.second.begin(), p.second.end(), [&newAmountSizes, &p]
-				(pair<size_t,pair<size_t,size_t>> amountSizes)
+			multimap <size_t, size_t> newAmountSizes;
+			for_each(p.second.begin(), p.second.end(), 
+				[&newAmountSizes, &p](pair<size_t,pair<size_t,size_t>> amountSizes)
 				{
 					newAmountSizes.insert(std::make_pair (amountSizes.first, amountSizes.second.first));
 				});
@@ -47,7 +46,7 @@ size_t Shoes_stock::count_goods() const {
 	size_t amount = 0;
 	for_each(sizes.begin(), sizes.end(), // Сначала из карты выбираем пары
 		[&amount](pair<string,
-			unordered_map<size_t, size_t>>  typeSizes) {
+			multimap<size_t, size_t>>  typeSizes) {
 				for_each(typeSizes.second.begin(), typeSizes.second.end(), //Из пар выбираем карту
 					[&amount](pair<size_t, size_t> sizesAmount) {
 						amount += sizesAmount.first;

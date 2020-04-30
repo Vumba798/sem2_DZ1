@@ -35,9 +35,6 @@
     <ClCompile Include="sources\Shoes_stock.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="sources\Source.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="sources\Stock.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>

@@ -1,5 +1,13 @@
 #include "../includes/Stock.h"
 
+size_t  Stock::get_amount() {
+	return thingsAmount;
+}
+
+void Stock::increase_amount(const size_t &amount) {
+	thingsAmount += amount;
+}
+
 size_t Stock::get_capacity() const {
 	return capacity;
 }
@@ -18,6 +26,10 @@ std::string Stock::get_name() const {
 
 stockType Stock::get_type() const {
 	return type;
+}
+
+void Stock::set_amount(const size_t& n) {
+	thingsAmount = n;
 }
 
 void Stock::set_capacity(const size_t &n) {

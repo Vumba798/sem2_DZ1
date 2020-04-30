@@ -3,12 +3,12 @@ using std::endl;
 using std::cin;
 using std::cout;
 
-unordered_map<string,unordered_map<size_t, pair<size_t, size_t>>> Cloth_stock::get_sizes() const {
+unordered_map<string,multimap<size_t, pair<size_t, size_t>>> Cloth_stock::get_sizes() const {
 	return sizes;
 }
 
 void Cloth_stock::set_sizes(unordered_map<string, 
-	unordered_map<size_t, pair<size_t, size_t>>> s) {
+	multimap<size_t, pair<size_t, size_t>>> s) {
 	
 	sizes = s;
 }
@@ -18,7 +18,7 @@ size_t Cloth_stock::count_goods() const {
 	
 	for_each(sizes.begin(), sizes.end(), 
 		[&amount](pair<string,
-			unordered_map<size_t, pair<size_t, size_t>>> typeSizes){
+			multimap<size_t, pair<size_t, size_t>>> typeSizes){
 		for_each(typeSizes.second.begin(), typeSizes.second.end(), 
 			[&amount](pair<size_t, pair<size_t, size_t>> sizes) {
 			amount += sizes.first;

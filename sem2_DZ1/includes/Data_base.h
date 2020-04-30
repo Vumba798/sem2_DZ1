@@ -2,17 +2,19 @@
 #ifndef _DATA_BASE_
 #define _DATA_BASE_
 
-#include "Stock.h"
+#include "Cloth_stock.h"
+#include "Shoes_stock.h"
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include <filesystem>
-#include <unordered_map>
+#include <map>
 
 using std::endl;
 using std::cin;
 using std::cout;
-using std::unordered_map;
+using std::map;
 using std::pair;
 using std::string;
 
@@ -27,7 +29,13 @@ public:
 	std::filesystem::path path;
 	Data_base() {};
 	explicit Data_base(std::filesystem::path p) : path(p) {};
+	void create();
+	void init(std::fstream& file);
 	void print() const;
+	void sort_by_name();
+	void sort_by_capacity();
+	void sort_by_city();
+	void write_to_file(std::fstream& file);
 	~Data_base() {};
 };
 
