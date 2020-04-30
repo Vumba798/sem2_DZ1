@@ -34,7 +34,6 @@ public:
 	void print() const;
 	void sort_by_name();
 	void sort_by_capacity();
-	void sort_by_city();
 	void write_to_file(std::fstream& file);
 	~Data_base() {};
 };

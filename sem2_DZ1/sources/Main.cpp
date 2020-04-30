@@ -6,11 +6,9 @@
 #include <string>
 
 
-
 #include "../includes/Data_base.h"
 #include "../includes/Cloth_stock.h"
 #include "../includes/Shoes_stock.h"
-#include "Source.cpp"
 
 namespace fs = std::filesystem;
 
@@ -120,7 +118,7 @@ int main(int argc, char* argv[]) {
 					name = name.substr(0, name.find(" "));
 					cout << "NAME: " << name << "\tNEW NAME: " << newName << endl;
 				}
-				catch (const std::out_of_range & ex) {
+				catch (...) {
 					cerr << "Unknown command" << endl << endl;
 				}
 			}

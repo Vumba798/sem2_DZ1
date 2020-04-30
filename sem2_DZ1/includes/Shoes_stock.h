@@ -15,7 +15,6 @@ public:
 	inline Shoes_stock(std::string n) : Stock(n) {
 		type = shoes;
 	};
-//	~Shoes_stock();
 	unordered_map<string,multimap<size_t, pair<size_t, size_t>>>  get_sizes() const override final;
 	void set_sizes(unordered_map<string, multimap<size_t, pair<size_t, size_t>>> s) override final;
 		size_t count_goods() const override final;

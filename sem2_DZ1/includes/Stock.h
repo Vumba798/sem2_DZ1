@@ -45,7 +45,7 @@ public:
 	virtual void set_name(const string&);
 	virtual void set_city(const string&);
 	virtual void set_capacity(const size_t&);
-	virtual size_t count_goods() const = 0;
+	virtual size_t count_goods() const = 0;  // i don't know why i wrote this function, i use simple counter
 	virtual unordered_map<string, multimap<size_t, pair<size_t, size_t>>> get_sizes() const = 0;
 	virtual void set_sizes(unordered_map<string, multimap<size_t, pair<size_t, size_t>>>) = 0;
 

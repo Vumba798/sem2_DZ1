@@ -16,6 +16,6 @@ public:
 //	~Cloth_stock();
 	unordered_map<string,multimap<size_t, pair<size_t, size_t>>> get_sizes() const override final;
 	void set_sizes(unordered_map<string,multimap<size_t, pair<size_t, size_t>>>) override final;
-	size_t count_goods() const;
+	size_t count_goods() const;		
 };
 
