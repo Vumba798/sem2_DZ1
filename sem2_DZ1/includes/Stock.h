@@ -12,9 +12,16 @@ using std::multimap;
 using std::unordered_map;
 using std::string;
 using std::pair;
+using std::cin;
+using std::cout;
+using std::endl;
 
 enum stockType {cloth,shoes};
 
+
+typedef unordered_map<string, multimap<size_t, pair<size_t, size_t>>> THING_SIZES_MAP;
+typedef std::pair<string, multimap<size_t, pair<size_t, size_t>>> THING_SIZES_PAIR;
+typedef multimap<size_t, pair<size_t, size_t>> AMOUNT_SIZE_MAP;
 
 
 class Stock {
@@ -46,10 +53,10 @@ public:
 	virtual void set_city(const string&);
 	virtual void set_capacity(const size_t&);
 	virtual size_t count_goods() const = 0;  // i don't know why i wrote this function, i use simple counter
-	virtual unordered_map<string, multimap<size_t, pair<size_t, size_t>>> get_sizes() const = 0;
-	virtual void set_sizes(unordered_map<string, multimap<size_t, pair<size_t, size_t>>>) = 0;
-
-
+	virtual THING_SIZES_MAP get_sizes() const = 0;
+	virtual void set_sizes(THING_SIZES_MAP) = 0;
+	virtual void edit_record() = 0;
+	virtual void print();
 };
 
 #endif

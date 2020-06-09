@@ -28,6 +28,8 @@ public:
 	std::vector<Stock*> stocks;
 	std::filesystem::path path;
 	Data_base() {};
+	void add_record();
+	void remove_record(const string& name);
 	explicit Data_base(std::filesystem::path p) : path(p) {};
 	void create();
 	void init(std::fstream& file);
@@ -35,6 +37,7 @@ public:
 	void sort_by_name();
 	void sort_by_capacity();
 	void write_to_file(std::fstream& file);
+	Stock* find(const string &name);
 	~Data_base() {};
 };
 

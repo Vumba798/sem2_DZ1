@@ -49,10 +49,11 @@ bool open_db(const std::vector<string>& dbList, Data_base& db, string name, std:
 		}
 	}
 	else {
-		cout << "There is no any database with such name" << endl << endl;
 		return false;
 	}
 }
+
+
 
 int main(int argc, char* argv[]) {
 	fs::path p(fs::current_path());
@@ -62,7 +63,7 @@ int main(int argc, char* argv[]) {
 	std::ofstream fout;
 	std::vector<string> dbList;
 	string line;
-	//INITISALISATION
+	//INITI	SALISATION
 	for (auto& it : fs::directory_iterator("data")) {
 
 		string name = it.path().string();
@@ -110,17 +111,24 @@ int main(int argc, char* argv[]) {
 		}
 		else if (msg.find("rename ") == 0) {
 			cout << endl << "-------------------------------------------------------------------------------------" << endl;
-			string name = msg.substr(7, msg.size());
-			if (find(dbList.begin(), dbList.end(), name) == std::end(dbList)) {
-				try {
-					string foo = name.substr(0, name.find(" "));
-					string newName = name.substr(foo.length() + 1, name.length());
-					name = name.substr(0, name.find(" "));
-					cout << "NAME: " << name << "\tNEW NAME: " << newName << endl;
+			try {
+				string oldName = msg.substr(7, msg.size());
+				string name = oldName.substr(oldName.find(" ") + 1, oldName.size());
+				oldName = oldName.substr(0, oldName.find(" "));
+				cout << "OLD NAME: " << oldName << "\tNEW NAME: " << name << endl;
+				if (find(dbList.begin(), dbList.end(), name) == std::end(dbList) && 
+					find(dbList.begin(), dbList.end(), oldName) != std::end(dbList)) {
+					fs::path p = fs::current_path() / "data";
+					oldName += ".txt";
+					name += ".txt";
+					fs::rename(p / oldName, p / name);
 				}
-				catch (...) {
-					cerr << "Unknown command" << endl << endl;
+				else {
+					cout << "Wrong database name!" << endl;
 				}
+			}
+			catch (...) {
+				cerr << "Unknown command" << endl << endl;
 			}
 		}
 		else if (msg.find("open ") == 0) {
@@ -129,15 +137,16 @@ int main(int argc, char* argv[]) {
 			if (open_db(dbList, db, name, file)) {
 				db.init(file);
 
+				cout << "=====================================================================================" << endl;
+				cout << "\t\t\tDATABASE " << name << endl;
+				cout << "=====================================================================================" << endl;
+
 				bool close = false;
 				while (close != true) {
-					cout << "=====================================================================================" << endl;
-					cout << "\t\t\tDATABASE " << name << endl;
-					cout << "=====================================================================================" << endl;
-					db.print();
+
 					cout << endl << ">> ";
 					getline(cin, msg);
-					if (msg == "exit") {
+					if (msg == "close") {
 						close = true;
 					}
 					else if (msg == "help") {
@@ -151,18 +160,25 @@ int main(int argc, char* argv[]) {
 						cout << "\t To choose stocks with small sizes use 'choose small sizes'" << endl << endl;
 						cout << "\t To choose stocks in city use 'choose in <city>'" << endl << endl;
 						cout << "\t To close DB use 'close'" << endl << endl;
-						cout << "\t To save current DB selection use 'save' or 'save as <newnName>'" << endl << endl;
+						cout << "\t To save current DB selection use 'save' or 'save as <newName>'" << endl << endl;
 						cout << "\t To undo DB selection use 'undo'" << endl << endl;
+						cout << "\t To print DB use 'print'" << endl << endl;
+						cout << "\t To count things in stocks use 'count <stockName>'" << endl << endl;
 					}
 					else if (msg.find("rename ") == 0) {
 						cout << endl << "-------------------------------------------------------------------------------------" << endl;
 						string name = msg.substr(7, msg.size());
 						name += ".txt";
 						fs::path p = fs::current_path() / "data";
+						fs::path old = fs::current_path() / "data" / db.path;
+						cout << "OLD: " << old << endl;
 						fs::rename(db.path, p / name);
 						db.path = "data/";
 						db.path += name;
 						db.path += ".txt";
+						file.open(db.path, ios::out);
+						db.write_to_file(file);
+						file.close();
 						cout << db.path << endl;
 					}
 					else if (msg == "delete") {
@@ -203,7 +219,7 @@ int main(int argc, char* argv[]) {
 							bool big = false;
 
 							unordered_map<string,
-								multimap<size_t, pair<size_t, size_t>>> sizes = db.stocks[i]->get_sizes();
+								AMOUNT_SIZE_MAP> sizes = db.stocks[i]->get_sizes();
 							stockType type = db.stocks[i]->get_type();
 							for (auto it1 = sizes.begin(); it1 != sizes.end(); ++it1) {
 								if (big) {
@@ -240,7 +256,7 @@ int main(int argc, char* argv[]) {
 						for (size_t i = 0; i < db.stocks.size();) {
 							bool small = false;
 							unordered_map<string,
-								multimap<size_t, pair<size_t, size_t>>> sizes = db.stocks[i]->get_sizes();
+								AMOUNT_SIZE_MAP> sizes = db.stocks[i]->get_sizes();
 							stockType type = db.stocks[i]->get_type();
 							for (auto it1 = sizes.begin(); it1 != sizes.end(); ++it1) {
 								if (small) {
@@ -262,7 +278,6 @@ int main(int argc, char* argv[]) {
 										}
 									}
 								}
-
 							}
 							if (!small) {
 								db.stocks.erase(db.stocks.begin() + i);
@@ -281,8 +296,7 @@ int main(int argc, char* argv[]) {
 						file.close();
 						cout << endl << endl << "\tDATABASE SAVED SUCCESSFULLY" << endl << endl;
 					}
-					else if (msg.find("save as " == 0)) {
-						cout << endl << "-------------------------------------------------------------------------------------" << endl;
+					else if (msg.find("save as ") == 0) {
 						name = msg.substr(8, msg.size());
 						db.path = name_to_path(name);
 						file.close();
@@ -292,47 +306,75 @@ int main(int argc, char* argv[]) {
 						dbList.push_back(name);
 						cout << endl << endl << "\tDATABASE SAVED SUCCESSFULLY" << endl << endl;
 					}
+					else if (msg == "print") {
+						cout << "=====================================================================================" << endl;
+						cout << "\t\t\tDATABASE " << name << endl;
+						cout << "=====================================================================================" << endl;
+						cout << endl << "-------------------------------------------------------------------------------------" << endl;
+						db.print();
+					}
+					else if (msg.find("count ") == 0) {
+						name = msg.substr(6, msg.size());
+						auto stock = db.find(name);
+						if (stock != NULL) {
+							cout << "Amount of things in " << name << ":\t" << stock->count_goods();
+						}
+						else {
+							cout << "There is no any stock with such name" << endl;
+						}
+						cout << endl << "-------------------------------------------------------------------------------------" << endl;
+					}
+					else if (msg.find("find ") == 0) {
+						string name = msg.substr(5, msg.size());
+						auto stock = db.find(name);
+						if (stock != NULL) {
+							cout << "Stock " << stock->get_name() << " was opened" << endl << endl;
+							cout << "You've opened " << stock->get_name() << " stock" << endl << endl;
+							stock->edit_record();
+
+						}
+						else {
+							cout << "There is no any stock with such name" << endl;
+						}
+					}
 					else {
 						cout << endl << "Unknown command" << endl;
-
 					}
-
 				}
 				file.close();
 
 			}
 		}
 		else if (msg.find("create ") == 0) {
-		cout << endl << "-------------------------------------------------------------------------------------" << endl;
-		string name = msg.substr(7, msg.size());
-		if (!open_db(dbList, db, name, file)) {
-			file.close();
+			cout << endl << "-------------------------------------------------------------------------------------" << endl;
 			string name = msg.substr(7, msg.size());
-			dbList.push_back(name);
-			db.path = name_to_path(name);
-			file.open(db.path, ios::out);
-			db.create();
-			db.write_to_file(file);
-			file.close();
-
-		}
+			if (!open_db(dbList, db, name, file)) {
+				file.close();
+				string name = msg.substr(7, msg.size());
+				dbList.push_back(name);
+				db.path = name_to_path(name);
+				file.open(db.path, ios::out);
+				db.create();
+				db.write_to_file(file);
+				file.close();
 			}
+		}
 		else if (msg == "show databases") {
-		cout << endl << "-------------------------------------------------------------------------------------" << endl;
-		for (auto& it : fs::directory_iterator("data")) {
-
-			string name = it.path().string();
-			name = name.substr(name.find("\\") + 1);
-			name = name.substr(0, name.size() - 4);
-			cout << name << endl;
+			cout << endl << "-------------------------------------------------------------------------------------" << endl;
+			for (auto& it : fs::directory_iterator("data")) {
+	
+				string name = it.path().string();
+				name = name.substr(name.find("\\") + 1);
+				name = name.substr(0, name.size() - 4);
+				cout << name << endl;
+			}
 		}
-			}
 		else {
-		cout << "unknown command" << endl;
-			}
+			cout << "unknown command" << endl;
+		}
 	}
 
 
 
 		return 0;
-	}
+}

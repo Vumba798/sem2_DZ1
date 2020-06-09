@@ -1,5 +1,10 @@
 #include "../includes/Data_base.h"
 
+typedef unordered_map<string, multimap<size_t, pair<size_t, size_t>>> THING_SIZES_MAP;
+typedef std::pair<string, multimap<size_t, pair<size_t, size_t>>> THING_SIZES_PAIR;
+typedef multimap<size_t, pair<size_t, size_t>> AMOUNT_SIZE_MAP;
+
+
 template <typename T> // Additional function
 void cin_protect(T& num) { //keeps you from cases when you input a symbol instead of number
 	cin >> num;
@@ -14,212 +19,21 @@ void cin_protect(T& num) { //keeps you from cases when you input a symbol instea
 	cin.ignore();
 }
 
+
 void Data_base::create() {
 
 	stocks.clear();
 	bool check1 = true;
 	while (check1) {
-		string msg;
-		cout << endl << "input the type of stock: cloth/shoes: ";
-		getline(cin, msg);
-		if (msg == "cloth") {
-			stocks.push_back(new Cloth_stock);
-			string tmp;
-			size_t amount;
-			cout << endl << "Input stock's name: ";
-			getline(cin, tmp);
-			stocks.back()->set_name(tmp);
-			cout << endl << "Input stock's city: ";
-			getline(cin, tmp);
-			stocks.back()->set_city(tmp);
-			while (1) {
-				try {
-					cout << endl << "Input stock's capacity: ";
-					cin_protect(amount);
-					break;
-				}
-				catch (const std::invalid_argument & ex) {
-					cout << "#####################################################################################" << endl << endl;
-					std::cerr << "An error has occured: " << ex.what() << endl;
-					continue;
-				}
-			}
-			stocks.back()->set_capacity(amount);
-
-
-			unordered_map<string, multimap<size_t, pair<size_t, size_t>>> sizes;
-			bool check2 = true;
-			string name;
-			while (check2) {
-				bool check3 = true;
-				while (1) {
-					try {
-						cout << endl << "Please, input the name of thing: ";
-						
-						getline(cin, name);
-						for_each(sizes.begin(), sizes.end(),
-							[&name](std::pair<string, multimap<size_t, pair<size_t, size_t>>> p) {
-								if (name == p.first) {
-									throw std::invalid_argument("This type of clothes is already exists");
-								}
-
-							});
-						break;
-					}
-					catch (const std::invalid_argument & ex) {
-						cout << "#####################################################################################" << endl << endl;
-						std::cerr << "An error has occured: " << ex.what() << endl;
-						continue;
-					}
-				}
-				multimap<size_t, pair<size_t, size_t>> amountSizes;
-				while (check3) {
-					try {
-						size_t s1, s2, amount;
-						while (true) {
-							try {
-								cout << endl << "Input the first size: ";
-								cin_protect(s1);
-								cout << endl << "Input the second size: ";
-								cin_protect(s2);
-								for_each(amountSizes.begin(), amountSizes.end(),
-									[&s1,&s2](pair < size_t, pair<size_t, size_t>> p) {
-										if (s1 == p.second.first && s2 == p.second.second) {
-											throw std::invalid_argument("this size is already exists");
-										}
-
-									});
-								cout << endl << "Input the amount of this size clothes: ";
-								cin_protect(amount);
-								if (stocks.back()->get_amount() + amount > stocks.back()->get_capacity()) {
-									throw std::invalid_argument("amount of things is greater than capacity");
-								}
-								break;
-							}
-							catch (const std::invalid_argument & ex) {
-								cout << "#####################################################################################" << endl << endl;
-								cout << "An error has occured: " << ex.what() << ".Please, try again: " << endl;
-								continue;
-							}
-						}
-						stocks.back()->increase_amount(amount);
-						amountSizes.insert(std::make_pair(amount, std::make_pair(s1, s2)));
-					}
-					catch (const std::exception & ex) {
-						cout << "#####################################################################################" << endl << endl;
-						std::cerr << "An error has occured: " << ex.what() << endl << endl;
-					}
-					cout << endl << endl << "Do you want to add one more record? 1/0 ";
-					cin_protect(check3);
-
-				}
-				sizes.insert(std::make_pair(name, amountSizes));
-				cout << "Do you want to add another thing? 1/0 ";
-				cin_protect(check2);
-			}
-			stocks.back()->set_sizes(sizes);
-			cout << endl << endl << "Do you want to add another stock? 1/0 ";
-			cin >> check1;
-		}
-		else if (msg == "shoes") {
-
-			stocks.push_back(new Shoes_stock);
-			string tmp;
-			size_t amount;
-			cout << endl << "Input stock's name: ";
-			getline(cin, tmp);
-			stocks.back()->set_name(tmp);
-			cout << endl << "Input stock's city: ";
-			getline(cin, tmp);
-			stocks.back()->set_city(tmp);
-			while (1) {
-				try {
-					cout << endl << "Input stock's capacity: ";
-					cin_protect(amount);
-					break;
-				}
-				catch (const std::invalid_argument & ex) {
-					cout << "#####################################################################################" << endl << endl;
-					std::cerr << "An error has occured: " << ex.what() << endl;
-					continue;
-				}
-			}
-			stocks.back()->set_capacity(amount);
-
-
-			unordered_map<string, multimap<size_t, pair<size_t, size_t>>> sizes;
-			bool check2 = true;
-			string name;
-			while (check2) {
-				bool check3 = true;
-				while (1) {
-					try {
-						cout << endl << "Please, input the name of thing: ";
-						getline(cin, name);
-						for_each(sizes.begin(), sizes.end(),
-							[&name](std::pair<string, multimap<size_t, pair<size_t, size_t>>> p) {
-								if (name == p.first) {
-									throw std::invalid_argument("This type of clothes is already exists");
-								}
-
-							});
-						break;
-					}
-					catch (const std::invalid_argument & ex) {
-						cout << "#####################################################################################" << endl << endl;
-						std::cerr << "An error has occured: " << ex.what() << endl;
-						continue;
-					}
-				}
-				multimap<size_t, pair<size_t, size_t>> amountSizes;
-				while (check3) {
-					size_t s, amount;
-					while (1) {
-						try {
-							cout << endl << "Input the size: ";
-							cin_protect(s);
-							cout << endl << "Input the amount of this size clothes: ";
-							cin_protect(amount);
-							for_each(amountSizes.begin(), amountSizes.end(),
-								[&s](pair < size_t, pair<size_t, size_t>> p) {
-									if (s == p.second.first) {
-										throw std::invalid_argument("this size is already exists");
-									}
-								});
-							if (stocks.back()->get_amount() + amount > stocks.back()->get_capacity()) {
-								throw std::invalid_argument("amount of things is greater than capacity");
-							}
-							break;
-						}
-						catch (const std::exception & ex) {
-							cout << "#####################################################################################" << endl << endl;
-							std::cerr << "An error has occured: " << ex.what() << ". Please, try again:" << endl << endl;
-						}
-					}
-					stocks.back()->increase_amount(amount);
-					amountSizes.insert(std::make_pair(amount, std::make_pair(s, 0)));
-					cout << endl << endl << "Do you want to add one more record? 1/0 ";
-					cin_protect(check3);
-				}
-				sizes.insert(std::make_pair(name, amountSizes));
-				cout << "Do you want to add another thing? 1/0 ";
-				cin_protect(check2);
-			}
-			stocks.back()->set_sizes(sizes);
-			cout << endl << endl << "Do you want to add another stock? 1/0 ";
-			cin >> check1;
-		}
-		else {
-			cout << "Unknown command, try again" << endl;
-			cin.clear();
-		}
-		cin.ignore();		
+		add_record();
+		cout << endl << endl << "Do you want to add another stock? 1/0 ";
+		cin >> check1;
 	}
 }
 
 void Data_base::init(std::fstream& file) {
 	stocks.clear();
-	unordered_map<string, multimap<size_t, pair<size_t, size_t>>> cSizes;
+	THING_SIZES_MAP cSizes;
 	string line;
 
 
@@ -229,10 +43,8 @@ void Data_base::init(std::fstream& file) {
 		getline(file, name);
 		if (line == "C") {
 			stocks.push_back(new Cloth_stock(name));
-			unordered_map<string, multimap<size_t, pair<size_t, size_t>>> cSizes;
-
+			THING_SIZES_MAP cSizes;
 			string clothType;
-
 			getline(file, line); // read capacity
 			stocks.back()->set_capacity(std::stoi(line));
 
@@ -241,7 +53,7 @@ void Data_base::init(std::fstream& file) {
 			{
 				getline(file, clothType); // считываем тип одежды
 
-				multimap<size_t, pair<size_t, size_t>> amountSizes;
+				AMOUNT_SIZE_MAP amountSizes;
 
 				getline(file, line); // read amount
 				while (line != ";") { // read type-sizes
@@ -263,11 +75,10 @@ void Data_base::init(std::fstream& file) {
 			stocks.back()->set_sizes(cSizes);
 		}
 		else if (line == "S") {
-			static Shoes_stock sStock(name);
-			unordered_map<string, multimap<size_t, pair<size_t, size_t>>> sSizes;
+			THING_SIZES_MAP sSizes;
 			string clothType;
 
-			stocks.push_back(&sStock);
+			stocks.push_back(new Shoes_stock (name));
 
 			getline(file, line); // read capacity
 			stocks.back()->set_capacity(std::stoi(line));
@@ -276,7 +87,7 @@ void Data_base::init(std::fstream& file) {
 			while (line != "@") {
 				getline(file, clothType); // reads cloth type
 
-				multimap<size_t, pair<size_t, size_t>> amountSizes;
+				AMOUNT_SIZE_MAP amountSizes;
 				getline(file, line); // read amount
 				while (line != ";") { // read delimeter of begin of type-sizes
 					size_t amount, s;
@@ -311,35 +122,250 @@ void Data_base::print() const {
 		cout << endl << "=====================================" << endl;
 		cout << "\tSTOCK #" << i << endl;
 		cout << "=====================================" << endl;
-		cout << "NAME\t" << stocks[i]->get_name() << endl;
-		cout << "TYPE\t";
-		if (stocks[i]->get_type() == cloth) {
-			cout << "cloth" << endl;
-		}
-		else {
-			cout << "shoes" << endl;
-		}
-		cout << "CITY\t" << stocks[i]->get_city() << endl;
-		cout << "CAPACITY " << stocks[i]->get_capacity() << endl;
-		cout << "AMOUNT\t" << stocks[i]->get_amount() << endl;
-		cout << "SIZES" << endl;
-		unordered_map<string, multimap<size_t, pair<size_t, size_t>>> sizes = stocks[i]->get_sizes();
-		for_each(sizes.begin(), sizes.end(), [](pair<string, multimap<size_t, pair<size_t, size_t>>> p) {
-			cout << " ###\t" << p.first << endl;
-			for_each(p.second.begin(), p.second.end(), [](pair<size_t, pair<size_t, size_t>> amountSizes) {
-				cout << "\t Size:\t" << amountSizes.second.first << "  ";
-				if (amountSizes.second.second != 0) {
-					cout << amountSizes.second.second;
-				}
-				cout << "\tAmount:\t" << amountSizes.first << endl;
-			});
-			cout << endl;
-		});
-
-		cout << "-------------------------------------" << endl;
+		stocks[i]->print();
 	}
 }
 
+
+
+void Data_base::write_to_file(std::fstream& file) {
+	for (size_t i = 0; i < stocks.size(); ++i) {
+		file << "#" << endl;
+		if (stocks[i]->get_type() == shoes) {
+			file << "S" << endl;
+		}
+		else {
+			file << "C" << endl;
+		}
+		file << stocks[i]->get_name() << endl;
+		file << stocks[i]->get_capacity() << endl;
+
+		THING_SIZES_MAP sizes;
+		sizes = stocks[i]->get_sizes();
+		for_each(sizes.begin(), sizes.end(), [&file](pair<string, AMOUNT_SIZE_MAP> p) {
+			file << "$" << endl;
+			file << p.first << endl;
+			for_each(p.second.begin(), p.second.end(), [&file](std::pair<size_t, pair<size_t, size_t>> amountSizes) {
+				file << amountSizes.first << endl;
+				file << amountSizes.second.first << endl;
+				file << amountSizes.second.second << endl;
+				});
+			file << ";" << endl;
+			});
+		file << "@" << endl;
+		file << stocks[i]->get_amount() << endl;
+		file << stocks[i]->get_city() << endl;
+	}
+}
+
+Stock* Data_base::find(const string &name) {
+	for (size_t i = 0; i < stocks.size(); ++i) {
+		if (name == stocks[i]->get_name()) {
+			return stocks[i];
+		}
+	}
+	return NULL;
+}
+
+void Data_base::remove_record(const string& name) {
+	std::remove_if(stocks.begin(), stocks.end(), [&name](Stock*& stock) {
+		return name == stock->get_name();
+	});
+}
+
+void Data_base::add_record() {
+	string msg;
+	cout << endl << "input the type of stock: cloth/shoes: ";
+	getline(cin, msg);
+	if (msg == "cloth") {
+		stocks.push_back(new Cloth_stock);
+		string tmp;
+		size_t amount;
+		cout << endl << "Input stock's name: ";
+		getline(cin, tmp);
+		stocks.back()->set_name(tmp);
+		cout << endl << "Input stock's city: ";
+		getline(cin, tmp);
+		stocks.back()->set_city(tmp);
+		while (1) {
+			try {
+				cout << endl << "Input stock's capacity: ";
+				cin_protect(amount);
+				break;
+			}
+			catch (const std::invalid_argument& ex) {
+				cout << "#####################################################################################" << endl << endl;
+				std::cerr << "An error has occured: " << ex.what() << endl;
+				continue;
+			}
+		}
+		stocks.back()->set_capacity(amount);
+
+
+		THING_SIZES_MAP sizes;
+		bool check2 = true;
+		string name;
+		while (check2) {
+			bool check3 = true;
+			while (1) {
+				try {
+					cout << endl << "Please, input the name of thing: ";
+
+					getline(cin, name);
+					for_each(sizes.begin(), sizes.end(),
+						[&name](THING_SIZES_PAIR p) {
+							if (name == p.first) {
+								throw std::invalid_argument("This type of clothes is already exists");
+							}
+
+						});
+					break;
+				}
+				catch (const std::invalid_argument& ex) {
+					cout << "#####################################################################################" << endl << endl;
+					std::cerr << "An error has occured: " << ex.what() << endl;
+					continue;
+				}
+			}
+			AMOUNT_SIZE_MAP amountSizes;
+			while (check3) {
+				try {
+					size_t s1, s2, amount;
+					while (true) {
+						try {
+							cout << endl << "Input the first size: ";
+							cin_protect(s1);
+							cout << endl << "Input the second size: ";
+							cin_protect(s2);
+							for_each(amountSizes.begin(), amountSizes.end(),
+								[&s1, &s2](pair < size_t, pair<size_t, size_t>> p) {
+									if (s1 == p.second.first && s2 == p.second.second) {
+										throw std::invalid_argument("this size is already exists");
+									}
+
+								});
+							cout << endl << "Input the amount of this size clothes: ";
+							cin_protect(amount);
+							if (stocks.back()->get_amount() + amount > stocks.back()->get_capacity()) {
+								throw std::invalid_argument("amount of things is greater than capacity");
+							}
+							break;
+						}
+						catch (const std::invalid_argument& ex) {
+							cout << "#####################################################################################" << endl << endl;
+							cout << "An error has occured: " << ex.what() << ".Please, try again: " << endl;
+							continue;
+						}
+					}
+					stocks.back()->increase_amount(amount);
+					amountSizes.insert(std::make_pair(amount, std::make_pair(s1, s2)));
+				}
+				catch (const std::exception& ex) {
+					cout << "#####################################################################################" << endl << endl;
+					std::cerr << "An error has occured: " << ex.what() << endl << endl;
+				}
+				cout << endl << endl << "Do you want to add one more record? 1/0 ";
+				cin_protect(check3);
+
+			}
+			sizes.insert(std::make_pair(name, amountSizes));
+			cout << "Do you want to add another thing? 1/0 ";
+			cin_protect(check2);
+		}
+		stocks.back()->set_sizes(sizes);
+	}
+	else if (msg == "shoes") {
+
+		stocks.push_back(new Shoes_stock);
+		string tmp;
+		size_t amount;
+		cout << endl << "Input stock's name: ";
+		getline(cin, tmp);
+		stocks.back()->set_name(tmp);
+		cout << endl << "Input stock's city: ";
+		getline(cin, tmp);
+		stocks.back()->set_city(tmp);
+		while (1) {
+			try {
+				cout << endl << "Input stock's capacity: ";
+				cin_protect(amount);
+				break;
+			}
+			catch (const std::invalid_argument& ex) {
+				cout << "#####################################################################################" << endl << endl;
+				std::cerr << "An error has occured: " << ex.what() << endl;
+				continue;
+			}
+		}
+		stocks.back()->set_capacity(amount);
+
+
+		THING_SIZES_MAP sizes;
+		bool check2 = true;
+		string name;
+		while (check2) {
+				bool check3 = true;
+				while (1) {
+					try {
+						cout << endl << "Please, input the name of thing: ";
+						getline(cin, name);
+						for_each(sizes.begin(), sizes.end(),
+							[&name](THING_SIZES_PAIR p) {
+								if (name == p.first) {
+									throw std::invalid_argument("This type of clothes is already exists");
+								}
+
+							});
+						break;
+					}
+					catch (const std::invalid_argument& ex) {
+						cout << "#####################################################################################" << endl << endl;
+						std::cerr << "An error has occured: " << ex.what() << endl;
+						continue;
+					}
+				}
+				AMOUNT_SIZE_MAP amountSizes;
+				while (check3) {
+					size_t s, amount;
+					while (1) {
+						try {
+							cout << endl << "Input the size: ";
+							cin_protect(s);
+							cout << endl << "Input the amount of this size clothes: ";
+							cin_protect(amount);
+							for_each(amountSizes.begin(), amountSizes.end(),
+								[&s](pair < size_t, pair<size_t, size_t>> p) {
+									if (s == p.second.first) {
+										throw std::invalid_argument("this size is already exists");
+									}
+								});
+							if (stocks.back()->get_amount() + amount > stocks.back()->get_capacity()) {
+								throw std::invalid_argument("amount of things is greater than capacity");
+							}
+							break;
+						}
+						catch (const std::exception& ex) {
+							cout << "#####################################################################################" << endl << endl;
+							std::cerr << "An error has occured: " << ex.what() << ". Please, try again:" << endl << endl;
+						}
+					}
+					stocks.back()->increase_amount(amount);
+					amountSizes.insert(std::make_pair(amount, std::make_pair(s, 0)));
+					cout << endl << endl << "Do you want to add one more record? 1/0 ";
+					cin_protect(check3);
+				}
+				sizes.insert(std::make_pair(name, amountSizes));
+				cout << "Do you want to add another thing? 1/0 ";
+				cin_protect(check2);
+		}
+		stocks.back()->set_sizes(sizes);
+		
+	}
+	else {
+		cout << "Unknown command, try again" << endl;
+		cin.clear();
+	}
+}
 
 bool name_comp(Stock* a, Stock* b) {
 	return a->get_name() < b->get_name();
@@ -355,34 +381,4 @@ bool capacity_comp(Stock* a, Stock* b) {
 
 void Data_base::sort_by_capacity() {
 	sort(stocks.begin(), stocks.end(), capacity_comp);
-}
-
-void Data_base::write_to_file(std::fstream& file) {
-	for (size_t i = 0; i < stocks.size(); ++i) {
-		file << "#" << endl;
-		if (stocks[i]->get_type() == shoes) {
-			file << "S" << endl;
-		}
-		else {
-			file << "C" << endl;
-		}
-		file << stocks[i]->get_name() << endl;
-		file << stocks[i]->get_capacity() << endl;
-
-		unordered_map<string, multimap<size_t, pair<size_t, size_t>>> sizes;
-		sizes = stocks[i]->get_sizes();
-		for_each(sizes.begin(), sizes.end(), [&file](pair<string, multimap<size_t, pair<size_t, size_t>>> p) {
-			file << "$" << endl;
-			file << p.first << endl;
-			for_each(p.second.begin(), p.second.end(), [&file](std::pair<size_t, pair<size_t, size_t>> amountSizes) {
-				file << amountSizes.first << endl;
-				file << amountSizes.second.first << endl;
-				file << amountSizes.second.second << endl;
-				});
-			file << ";" << endl;
-			});
-		file << "@" << endl;
-		file << stocks[i]->get_amount() << endl;
-		file << stocks[i]->get_city() << endl;
-	}
 }
