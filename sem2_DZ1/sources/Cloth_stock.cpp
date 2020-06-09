@@ -46,12 +46,20 @@ void Cloth_stock::edit_record() {
 	string msg;
 	bool open = true;
 
+	cout << "First of all, you should choose what you want to change, name of thing or size, use 'names' or 'sizes'" << endl << endl;
+
+	cout << "\t\tList for edititng names" << endl << endl;
 	cout << "if you want to delete some kind of things input 'delete <name>'" << endl << endl;
 	cout << "if you want to add new kind of things input 'add <name>'" << endl << endl;
 	cout << "if you want edit name of thing input 'change <oldName> <newName>" << endl << endl;
-	cout << "if you want to close editor, input 'exit'" << endl << endl;
 	cout << "if you want to print the stock, input 'print'" << endl << endl;
-	cout << "if you want to see avaible commands, input 'help'" << endl << endl;
+	cout << "if you want to close editor, input 'exit'" << endl << endl;
+
+	cout << "\t\tList for edititng sizes" << endl << endl;
+	cout << "if you want to delete some size input 'delete <name> <size1> <size2>'" << endl << endl;
+	cout << "if you want to add new size of things input 'add <name> <size1> <size2> <amount>'" << endl << endl;
+	cout << "if you want edit name of thing inpuut 'change <name> <size1> <size2> <newAmount>'" << endl << endl;
+	cout << "if you want to print the stock, input 'print'" << endl << endl;
 
 	while (open) {
 		cout << ">>> ";
@@ -60,11 +68,19 @@ void Cloth_stock::edit_record() {
 			open = false;
 		}
 		else if (msg == "help") {
+
+			cout << "\t\tList for edititng names" << endl << endl;
 			cout << "if you want to delete some kind of things input 'delete <name>'" << endl << endl;
 			cout << "if you want to add new kind of things input 'add <name>'" << endl << endl;
 			cout << "if you want edit name of thing input 'change <oldName> <newName>" << endl << endl;
 			cout << "if you want to print the stock, input 'print'" << endl << endl;
 			cout << "if you want to close editor, input 'exit'" << endl << endl;
+
+			cout << "\t\tList for edititng sizes" << endl << endl;
+			cout << "if you want to delete some size input 'delete <name> <size1> <size2>'" << endl << endl;
+			cout << "if you want to add new size of things input 'add <name> <size1> <size2> <amount>'" << endl << endl;
+			cout << "if you want edit name of thing inpuut 'change <name> <size1> <size2> <newAmount>'" << endl << endl;
+			cout << "if you want to print the stock, input 'print'" << endl << endl;
 		}
 		else if (msg == "print") {
 			print();
@@ -161,13 +177,15 @@ void Cloth_stock::edit_record() {
 		
 		else if (msg == "sizes") {
 
-			cout << "if you want to delete some size input 'delete <name> <size1> <size2>'" << endl << endl;
-			cout << "if you want to add new size of things input 'add <name> <size1> <size2> <amount>'" << endl << endl;
-			cout << "if you want edit name of thing inpuut 'change <name> <size1> <size2> <newAmount>'" << endl << endl;
-			cout << "if you want to print the stock, input 'print'" << endl << endl;
 			cout << ">>>> ";
 			getline(cin, msg);
-			if (msg == "print") {
+			if (msg == "help") {
+				cout << "if you want to delete some size input 'delete <name> <size1> <size2>'" << endl << endl;
+				cout << "if you want to add new size of things input 'add <name> <size1> <size2> <amount>'" << endl << endl;
+				cout << "if you want edit name of thing inpuut 'change <name> <size1> <size2> <newAmount>'" << endl << endl;
+				cout << "if you want to print the stock, input 'print'" << endl << endl;
+			}
+			else if (msg == "print") {
 				print();
 			}
 			else if (msg.find("delete ") == 0) {

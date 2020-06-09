@@ -93,7 +93,9 @@ void Shoes_stock::edit_record() {
 		}
 		else if (msg == "help") {
 
-			cout << "First of all, you should choose what you want to change, name of thing or size, use 'name' or 'size'" << endl << endl;
+			cout << "If you want to edit records, you should open datebase," << endl << 
+				"then find stock and choose mode of editing, either names, or sizes" << endl << endl;
+			cout << "First of all, you should choose what you want to change, name of thing or size, use 'names' or 'sizes'" << endl << endl ;
 
 			cout << "\t\tList for edititng names" << endl << endl;
 			cout << "if you want to delete some kind of things input 'delete <name>'" << endl << endl;
@@ -101,8 +103,8 @@ void Shoes_stock::edit_record() {
 			cout << "if you want edit name of thing input 'change <oldName> <newName>" << endl << endl;
 			cout << "if you want to see avaible commands, input 'help'" << endl << endl;
 
-			cout << "\t\tList for editing sizes" << endl << endl;\
-				cout << "if you want to delete some size input 'delete <name> <size>'" << endl << endl;
+			cout << "\t\tList for editing sizes" << endl << endl;
+			cout << "if you want to delete some size input 'delete <name> <size>'" << endl << endl;
 			cout << "if you want to add new size of things input 'add <name> <size> <amount>'" << endl << endl;
 			cout << "if you want edit name of thing inpuut 'change <name> <size> <newAmount>'" << endl << endl;
 			cout << "----------------------------------------------------------------------------------------------------" << endl << endl;

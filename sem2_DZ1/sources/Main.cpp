@@ -98,6 +98,23 @@ int main(int argc, char* argv[]) {
 			cout << "\t To close DB use 'close'" << endl << endl;
 			cout << "\t To save current DB selection use 'save' or 'save as <newnName>'" << endl << endl;
 			cout << "\t To undo DB selection use 'undo'" << endl << endl;
+
+
+			cout << "\t\tIf you want to edit records, you should open datebase," << endl <<
+				"\t\tthen find stock and choose mode of editing, either names, or sizes" << endl << endl;
+			cout << "\t\tFirst of all, you should choose what you want to change," <<  
+				"\t\tname of thing or size, use 'name' or 'size'" << endl << endl;
+
+			cout << "\t\t\t\tList for edititng names" << endl << endl;
+			cout << "\t\tif you want to delete some kind of things input 'delete <name>'" << endl << endl;
+			cout << "\t\tif you want to add new kind of things input 'add <name>'" << endl << endl;
+			cout << "\t\tif you want edit name of thing input 'change <oldName> <newName>" << endl << endl;
+			cout << "\t\tif you want to see avaible commands, input 'help'" << endl << endl;
+
+			cout << "\t\t\t\tList for editing sizes" << endl << endl;
+			cout << "\t\tif you want to delete some size input 'delete <name> <size>'" << endl << endl;
+			cout << "\t\tif you want to add new size of things input 'add <name> <size> <amount>'" << endl << endl;
+			cout << "\t\tif you want edit name of thing inpuut 'change <name> <size> <newAmount>'" << endl << endl;
 		}
 
 		else if (msg == "shutdown") {
